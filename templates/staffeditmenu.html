@@ -4,7 +4,7 @@
 
 {% block content %}
 
-        <form method="GET" novalidate>{% csrf_token %}
+  <form method="GET" novalidate>{% csrf_token %}
     <select name="menuitems">
         {%  for result in results %}
         <option>{{ result }}</option>
@@ -14,15 +14,17 @@
     <button type="submit">Edit Menu Item</button>
 
   </form>
-  <h2>Edit Menu Item</h2>
-  <form method="post">
-    {% csrf_token %}
-      <p>Name:<br>{{ form.name }}</p>
-      <p>Description:<br>{{  form.description }}</p>
-      <p>Type:<br> {{ form.type }}</p>
-      <p>Price:<br>{{ form.price }}</p>
-      <p hidden> {{ form.item_id }}</p>
-      <button type="submit">Submit</button>
 
-</form>
+  <h2>Edit Menu Item</h2>
+  <form method="post">{% csrf_token %}
+      {% if form.name != null %}
+          <p>Name:<br>{{ form.name }}</p>
+          <p>Description:<br>{{  form.description }}</p>
+          <p>Type:<br> {{ form.type }}</p>
+          <p>Price:<br>{{ form.price }}</p>
+          <p hidden> {{ form.item_id }}</p>
+          <button type="submit" id="menuedit" name="menuedit">Submit</button>
+      {% endif %}
+    </form>
+
 {% endblock %}
