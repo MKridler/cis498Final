@@ -1,4 +1,5 @@
 from cis498.mongodb.customers import Customers
+from cis498.mongodb.drivers import Drivers
 from cis498.mongodb.mongoclient import MongoClientHelper
 from bson.objectid import ObjectId
 import datetime
@@ -34,30 +35,46 @@ class Orders:
 
     # This will generate an order document and also update the customer record
     def generateOrder(self, customer, order, form):
-        #Generate a UUID https://en.wikipedia.org/wiki/Universally_unique_identifier
         datetime_time = datetime.datetime.now()
-        # TODO :update driver to be an option
+        # Determine Delivery Method
+        orderType = form['delivery_method'].data
+        drivers = Drivers()
+        if orderType == '1':
+            driver = None
+        elif orderType == '2':
+            driver = drivers.find_staff_driver()
+        else:
+            driver = drivers.find_contract_driver()
         order = {
             'email': customer.email,
             'items': order,
             'comments': form['comments'].data,
             'orderStatus': 'Received',
-            'orderType': deliveryDict.get(form['delivery_method'].data),
+            'orderType': deliveryDict.get(orderType),
             'dateTime': datetime_time,
-            'driver': 'jackiestewart@willyspizza.com'
+            'driver': driver,
+            'tip_amount': form.data['tipamount']
         }
         generatedOrder = self.orders_db.insert_one(order)
         self.updateCustomerRecord(customer.email, generatedOrder.inserted_id)
+        self.driver_on_delivery(driver)
 
     # Updates the customer record
     def updateCustomerRecord(self, email, orderId):
         customer = Customers()
         customer.updateCustomerOrders(email, orderId)
 
+    # Updates the driver record
+    def driver_on_delivery(self, email):
+        driver = Drivers()
+        driver.update_driver_on_delivery(email)
+
 
     # Functional Requirement 5
     def getCurrentOrders(self):
         orderCollection = self.orders_db.find({'orderStatus': {"$ne": self.ORDER_COMPLETE}})
+        # orderCollection = self.orders_db.find({"$and":[{"orderStatus":{"$ne": self.ORDER_COMPLETE}},
+        #                                                {"orderStatus":{"$ne": self.IN_TRANSIT}}]})
         orderList = []
         for order in orderCollection:
             Dict = dict({
@@ -65,7 +82,8 @@ class Orders:
                 'id': order['_id'],
                 'comments': order['comments'],
                 'items': order['items'],
-                'status': order['orderStatus']
+                'status': order['orderStatus'],
+                'driver': order['driver']
             })
             orderList.append(Dict)
         return orderList
@@ -113,11 +131,36 @@ class Orders:
                 orderList.append(Dict)
         return orderList
 
+    def get_driver_order_history(self, email):
+        orderCollection = self.orders_db.find()
+        driverOrders = []
+        for orders in orderCollection:
+            if orders['driver'] == email:
+                order = Order(orders['email'], orders['items'], orders['comments'], orders['orderType'], orders['dateTime'],
+                               orders['driver'], orders['_id'], orders['tip_amount'])
+                driverOrders.append(order)
+        if not driverOrders:
+            return None
+        else:
+            driverDict = {}
+            for driverOrder in driverOrders:
+                dictKey = driverOrder.datetime.strftime("%m/%d/%Y")
+                if dictKey not in driverDict:
+                    driverDict[dictKey] = [1, driverOrder.tips]
+                else:
+                    dictList = driverDict[dictKey]
+                    orderTotal = dictList[0] + 1
+                    origVal = float(dictList[1])
+                    driverTips = float(driverOrder.tips)
+                    newVal = origVal + driverTips
+                    driverDict[dictKey] = [orderTotal, newVal]
+            return driverDict
 
     def updateOrder(self, order):
 
         oidQuery = {"_id": ObjectId(order)}
         orderToUpdate = self.orders_db.find_one(oidQuery)
+        currentOrderStatus = orderToUpdate[self.ORDER_STATUS]
         if orderToUpdate[self.ORDER_STATUS] == self.RECEIVED:
             orderToUpdate[self.ORDER_STATUS] = self.IN_PROGRESS
         elif orderToUpdate[self.ORDER_STATUS] == self.IN_PROGRESS:
@@ -129,7 +172,37 @@ class Orders:
         elif orderToUpdate[self.ORDER_STATUS] == self.IN_TRANSIT or orderToUpdate[self.ORDER_STATUS] == self.READY_FOR_PICKUP:
             orderToUpdate[self.ORDER_STATUS] = self.ORDER_COMPLETE
 
+        if(currentOrderStatus == self.IN_TRANSIT and orderToUpdate[self.ORDER_STATUS] == self.ORDER_COMPLETE):
+            driver = Drivers()
+            driver.update_driver_off_delivery(orderToUpdate['driver'])
+
         self.orders_db.update_one(oidQuery, {"$set": {self.ORDER_STATUS: orderToUpdate[self.ORDER_STATUS]}})
+
+    def generate_customer_order_report(self):
+        orderCollection = self.orders_db.find()
+        orders = []
+        for order in orderCollection:
+            orders.append(order['email'] + " " + order['dateTime'].strftime("%m/%d/%Y, %H:%M:%S") + " Order " + ",".join(order['items']))
+        return (orders)
+
+    def generate_driver_report(self):
+        orderCollection = self.orders_db.find()
+        orders = []
+        for order in orderCollection:
+            orders.append(order['driver'] + " " + order['dateTime'].strftime("%m/%d/%Y, %H:%M:%S"))
+        return (orders)
+
+class Order:
+
+    def __init__(self, email, items, comments, ordertype, datetime, driver, id, tips):
+        self.email = email
+        self.items = items
+        self.comments = comments
+        self.ordertype = ordertype
+        self.datetime = datetime
+        self.driver = driver
+        self.id = id
+        self.tips = tips
 
 
 

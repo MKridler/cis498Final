@@ -14,7 +14,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2', 'name', 'address')
+        fields = ('username', 'email', 'password1', 'password2', 'name', 'address', 'phone_number')
 
     def clean(self):
         email = self.cleaned_data.get('email')
@@ -54,11 +54,11 @@ DELIVERY_OPTIONS = (
 )
 
 TIP_OPTIONS = (
-    ("1", "15%"),
-    ("2", "18%"),
-    ("3", "20%"),
-    ("4", "Custom Amount"),
-    ("5", "None")
+    ("1", "None"),
+    ("2", "15%"),
+    ("3", "18%"),
+    ("4", "20%"),
+    ("5", "Custom Amount"),
 )
 class CheckoutForm(forms.Form):
     name = forms.CharField(max_length=50, required=True)
@@ -67,11 +67,12 @@ class CheckoutForm(forms.Form):
     delivery_method = forms.ChoiceField(choices=DELIVERY_OPTIONS, required=True)
     phone_number = forms.CharField(max_length=11, min_length=10, required=True)
     tip = forms.ChoiceField(choices=TIP_OPTIONS, required=True)
+    tipAmount = forms.DecimalField(max_digits=5)
     price = forms.DecimalField(max_digits=5)
 
     class Meta:
         model = ModelForm
-        fields = ('nanme', 'address', 'comments', 'delivery_method', 'phone_number', 'price', 'tip')
+        fields = ('name', 'address', 'comments', 'delivery_method', 'phone_number', 'price', 'tip', 'tipAmount')
 
     def clean(self, value):
         try:

@@ -12,11 +12,11 @@ class Customers:
         name = form.cleaned_data.get('name')
         email = form.cleaned_data.get('email').lower()
         address = form.cleaned_data.get('address')
-        phone_number = form.cleaned_data.get('phonenumber')
+        phone_number = form.cleaned_data.get('phone_number')
         customer = {"name": name,
                     "email": email,
                     "address": address,
-                    "phonenumber": phone_number}
+                    "phone_number": phone_number}
 
         self.customers_db.insert_one(customer)
 
@@ -41,7 +41,12 @@ class Customers:
     def findCustomerByEmail(self, email):
         customer_query = {"email": email.lower()}
         result = self.customers_db.find_one(customer_query)
-        return Customer(result['name'], result['email'], result['address'], result['phonenumber'], result['orders'])
+        return Customer(result['name'], result['email'], result['address'], result['phone_number'], result['orders'])
+
+    def findCustomerInfoByEmail(self, email):
+        customer_query = {"email": email.lower()}
+        result = self.customers_db.find_one(customer_query)
+        return Customer(result['name'], result['email'], result['address'], result['phone_number'], None)
 
 class Customer:
 

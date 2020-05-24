@@ -11,14 +11,21 @@
             <p>Items: {{ order.items }}</p>
             <p>Comments: {{ order.comments }}</p>
             <p>Customer Email: {{ order.email }}</p>
+            {% if order.driver != null %}
+                <p>Driver: {{ order.driver }}</p>
+            {%  endif %}
             <p>Order Status: {{ order.status }}</p>
-            <a href="{% url 'updateOrders' order.id %}" class="btn btn-warning">Update Order</a>
+            {% if order.status != "In Transit" %}
+                <a href="{% url 'updateOrders' order.id %}" class="btn btn-warning">Update Order</a>
+            {%  endif %}
         </div>
     {% endfor %}
   </div>
   <br>
   <hr>
   <input type="button" class="button" value = "Edit Menu Items" onclick="location.href='{% url 'editMenuItem' %}'">
+  <input type="button" class="button" value = "Generate Customer Report" onclick="location.href='{% url 'customerreport' %}'">
+  <input type="button" class="button" value = "Generate Driver Report" onclick="location.href='{% url 'driverreport' %}'">
 
   <p><a href="{% url 'logout' %}">Logout</a></p>
 {% else %}

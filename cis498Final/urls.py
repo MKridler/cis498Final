@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^stafflogin/$', cisviews.stafflogin, name='stafflogin'),
+    url(r'^stafflogout/$', cisviews.staff_logout, name='stafflogout'),
     url(r'^signup/$', cisviews.signup, name='signup'),
     url(r'^staffhome/$', cisviews.staffhome, name='staffhome'),
     url(r'^updateOrders/(?P<item_id>[-\w]+)/$', cisviews.updateOrders, name='updateOrders'),
@@ -37,4 +38,6 @@ urlpatterns = [
     url(r'^add_to_cart/(?P<item_id>[-\w]+)$', cisviews.add_to_cart, name='add_to_cart'),
     url(r'^delete_from_cart/(?P<item_id>[-\w]+)$', cisviews.delete_from_cart, name='delete_from_cart'),
     url(r'^editMenuItem/$', cisviews.editMenuItem, name='editMenuItem'),
+    url(r'^customerreport/$', cisviews.customer_report, name='customerreport'),
+    url(r'^driverreport/$', cisviews.driver_report, name='driverreport'),
 ]
