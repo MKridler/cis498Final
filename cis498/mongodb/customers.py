@@ -48,6 +48,7 @@ class Customers:
         result = self.customers_db.find_one(customer_query)
         return Customer(result['name'], result['email'], result['address'], result['phone_number'], None)
 
+
 class Customer:
 
     def __init__(self, name, email, address, phone_number, orders):

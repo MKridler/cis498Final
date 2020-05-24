@@ -40,6 +40,9 @@
         </tr>
       {% endfor %}
   {%  if order %}
+      <form method="GET" novalidate>{% csrf_token %}
+        <button id="clearCart" name= "clearCart" type="submit">Delete All Items from Cart</button>
+        </form>
       <p>Sales Tax: 6.25%</p>
       <p>Total Price: ${{ total }}</p>
       <a href="{% url 'checkout' %}">Checkout</a>
@@ -49,6 +52,19 @@
   </div>
       <br>
       <hr>
+
+    {% if order_history %}
+        <form method="GET" novalidate>{% csrf_token %}
+        <select id="order_history" name="order_history">
+            {%  for order in order_history %}
+            <option>{{ order }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add Previous Order To Cart</button>
+        </form>
+        {% endif %}
+    <br>
+    <hr>
   <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
   <p>You are not logged in</p>

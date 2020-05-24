@@ -43,7 +43,6 @@ class MenuForm(forms.Form):
     def getName(self):
         return self.name
 
-    # TODO update valid Form
     def is_valid(self):
         return True
 
@@ -83,7 +82,6 @@ class CheckoutForm(forms.Form):
     def getName(self):
         return self.name
 
-    # TODO update valid form
     def is_valid(self):
         return True
 

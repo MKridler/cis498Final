@@ -36,15 +36,6 @@
   <br>
   <hr>
   <p><a href="{% url 'logout' %}">Logout</a></p>
-  <script type="text/javascript">
-    function displaySelect(val) {
-        console.log(val)
-        var list = "{{ orderHistory }}"
-        console.log(list)
-        {#var values = {{ orderHistory }}#}
-        {#console.log(values)#}
-    }
-  </script>
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">login</a>

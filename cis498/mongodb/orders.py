@@ -192,6 +192,25 @@ class Orders:
             orders.append(order['driver'] + " " + order['dateTime'].strftime("%m/%d/%Y, %H:%M:%S"))
         return (orders)
 
+    def find_order_by_id(self, oid):
+        oidQuery = {"_id": ObjectId(oid)}
+        orders = self.orders_db.find_one(oidQuery)
+        order = Order(orders['email'], orders['items'], orders['comments'], orders['orderType'], orders['dateTime'],
+                               orders['driver'], orders['_id'], orders['tip_amount'])
+        return order
+
+    def get_customer_order_history(self, email):
+        customers = Customers()
+        customer = customers.findCustomerByEmail(email)
+        order_history = []
+        for order in customer.orders:
+           order_history.append(self.find_order_by_id(ObjectId(order)))
+        order_items = []
+        for order in order_history:
+            order_items.append(order.items)
+        return order_items
+
+
 class Order:
 
     def __init__(self, email, items, comments, ordertype, datetime, driver, id, tips):

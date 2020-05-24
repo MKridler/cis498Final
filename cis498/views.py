@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, render_to_response
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
 
@@ -17,13 +17,21 @@ from cis498.mongodb.orders import Orders
 
 @login_required()
 def home(request):
+    if request.method == 'GET' and 'order_history' in request.GET:
+        add_to_cart_from_history(request)
+        return redirect(home)
+    elif request.method == 'GET' and 'clearCart' in request.GET:
+        delete_cart_order(request.user.email)
+        return redirect(home)
     menu = get_menu()
     order = get_order(request)
     total = get_total(order)
+    order_history = (get_customer_order_history(request.user.email))
     context = {
         'menu': menu,
         'order': order,
-        'total': total
+        'total': total,
+        'order_history': order_history
     }
     return render(request, 'home.html', context)
 
@@ -121,6 +129,28 @@ def add_to_cart(request, **kwargs):
 
     messages.info(request, "item added to cart")
     return redirect(reverse('home'))
+
+@login_required()
+def add_to_cart_from_history(request):
+    user = request.user
+    cart = Cart()
+    item_id = request.GET['order_history']
+    item_list = item_id.split(',')
+    menu = Menu()
+    for items in item_list:
+        item = menu.findByName(items)
+        cart_item = {
+            "name": item.name,
+            "price": item.price,
+            "item_id": item.id
+        }
+        if cart.doesOrderExist(user.email):
+            cart.addToCart(user.email, cart_item)
+        else:
+            cart.createCartItem(user.email, cart_item)
+
+        messages.info(request, "item added to cart")
+    return redirect('home')
 
 
 @login_required()
@@ -288,3 +318,12 @@ def get_total(order):
 def delete_cart_order(email):
     cart = Cart()
     cart.deleteCart(email)
+
+def get_customer_order_history(email):
+    orders = Orders()
+    order_history =  orders.get_customer_order_history(email)
+    string_order_history = []
+    for order in order_history:
+        order = ','.join(order)
+        string_order_history.append(order)
+    return string_order_history

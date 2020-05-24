@@ -1,3 +1,5 @@
+from bson import ObjectId
+
 from cis498.mongodb.mongoclient import MongoClientHelper
 
 
@@ -34,8 +36,9 @@ class Cart:
 		cart = self.doesOrderExist(email)
 		if cart:
 			for item in cart['item']:
-				if id == item['item_id']:
+				if id == str(ObjectId(item['item_id'])):
 					cart['item'].remove(item)
+					break
 
 		self.cart_db.update_one({"email": email.lower()}, {"$set": {"item": cart['item']}})
 
