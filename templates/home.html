@@ -13,7 +13,9 @@
             <p>{{ menuItem.name }}</p>
             <p>{{ menuItem.description }}</p>
             <p>Price: ${{ menuItem.price }}</p>
+            {% if order|length < 5 %}
             <a href="{% url 'add_to_cart' menuItem.id %}" class="btn btn-warning">Add to Cart</a>
+            {% endif %}
         </div>
     {% endfor %}
   </div>
@@ -47,7 +49,12 @@
       <p>Sales Tax: 6.25%</p>
       <p>Total Price: ${{ total }}</p>
       <a href="{% url 'checkout' %}">Checkout</a>
+      {% if order|length == 5 %}
+          <script>
+              alert("For purchases of more than 5 pizzas please contact us over the phone.");
+          </script>
       {% endif %}
+  {% endif %}
   </div>
       <br>
       <hr>
