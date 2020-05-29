@@ -7,7 +7,7 @@
   <div style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Staff Portal</div>
   <div class="row">
   {% for order in orders %}
-        <div class="col-sm-3">
+        <div style="border:2px solid black;width: fit-content;padding: 10px; margin: 10px; text-align: left; float: left" >
             <p>Items: {{ order.items }}</p>
             <p>Comments: {{ order.comments }}</p>
             <p>Customer Email: {{ order.email }}</p>
@@ -21,6 +21,7 @@
         </div>
     {% endfor %}
   </div>
+    <div style="clear: both"></div>
   <br>
   <hr>
   <input type="button" class="button" value = "Edit Menu Items" onclick="location.href='{% url 'editMenuItem' %}'">

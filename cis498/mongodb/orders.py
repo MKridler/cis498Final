@@ -193,6 +193,8 @@ class Orders:
         orderCollection = self.orders_db.find()
         orders = []
         for order in orderCollection:
+            if order['driver'] is None:
+                continue
             orders.append(order['driver'] + " " + order['dateTime'].strftime("%m/%d/%Y, %H:%M:%S"))
         return (orders)
 

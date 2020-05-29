@@ -10,7 +10,9 @@
             <p>{{ order.comments }}</p>
             <p>{{ order.email }}</p>
             <p>Order Status: {{ order.status }}</p>
-            <p>Order Type: {{ order.type }}</p>
+            {% if order.type|length > 1 %}
+                <p>Order Type: {{ order.type }}</p>
+            {% endif %}
         {% if 'Pickup' not in order.type %}
             {%  if order.status == 'Received' %}
                 {% load static %}
