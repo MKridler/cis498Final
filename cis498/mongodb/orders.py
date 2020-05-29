@@ -94,10 +94,11 @@ class Orders:
         #First get the customer order history
         final_result = None
         customerOrders = customer.orders
-        for order in customerOrders:
-            status = self.orders_db.find_one({'_id': ObjectId(order)})
-            if status['orderStatus'] != 'Order Complete':
-                final_result = status
+        if customerOrders is not None:
+            for order in customerOrders:
+                status = self.orders_db.find_one({'_id': ObjectId(order)})
+                if status['orderStatus'] != 'Order Complete':
+                    final_result = status
 
         if final_result == None:
             order_list = {
@@ -117,6 +118,7 @@ class Orders:
                 }
 
         return order_list
+
 
     def get_driver_orders(self, user):
         orderCollection = self.orders_db.find({'orderStatus': self.IN_TRANSIT})

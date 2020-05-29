@@ -137,11 +137,17 @@
     </script>
     <script>
     window.onload = function(){
-        var total = {{ total }}
+        var total = {{ total }};
+        var orderStatus = "{{orderStatus}}";
+        console.log(orderStatus)
         document.getElementById('totalPrice').value = total
         document.getElementById('tipAmount').value = 0
         if (total > 0){
             document.getElementById("checkout").disabled=false;
+        }
+        if (orderStatus != "No Pending Orders"){
+            alert("You have an existing order currently processing.");
+            document.getElementById("checkout").disabled=true;
         }
 
 };

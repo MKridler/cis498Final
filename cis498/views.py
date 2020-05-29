@@ -70,13 +70,17 @@ def checkout(request):
         order = get_order(request)
         total = get_total(order)
         # form = CheckoutForm()
-        customer = Customers()
-        customerInfo = customer.findCustomerInfoByEmail(request.user.email)
+        customers = Customers()
+        customerInfo = customers.findCustomerByEmail(request.user.email)
+        orders = Orders()
+        customer_orders = orders.getCurrentUserOrder(request.user.email, customerInfo)
+        pendingOrderStatus = customer_orders['status']
         form = CheckoutForm(initial={'name': customerInfo.name, 'address': customerInfo.address, 'phone_number': customerInfo.phone_number})
         context = {
             'form': form,
             "total": total,
-            "order": order
+            "order": order,
+            "orderStatus": pendingOrderStatus
         }
         return render(request, 'checkout.html',  context)
 
