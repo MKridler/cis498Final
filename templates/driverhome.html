@@ -20,12 +20,14 @@
   <hr>
   <div class="row">
   <form method="GET" novalidate>{% csrf_token %}
+    {% if orderHistory %}
     <select name="deliveryHistory">
         {%  for key in orderHistory %}
         <option>{{ key }}</option>
         {% endfor %}
     </select>
     <button type="submit">View Transaction History</button>
+        {% endif %}
   </form>
 
     {% if transactionHistory %}

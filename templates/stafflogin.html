@@ -1,7 +1,7 @@
 {% extends 'staffbase.html' %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" style="text-align: center;">
     <h2>Staff Login</h2>
     <form method="POST" id="add_form" action="{% url 'stafflogin' %}">{% csrf_token %}
       <div class="form-group">

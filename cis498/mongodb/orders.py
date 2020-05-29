@@ -57,7 +57,8 @@ class Orders:
         }
         generatedOrder = self.orders_db.insert_one(order)
         self.updateCustomerRecord(customer.email, generatedOrder.inserted_id)
-        self.driver_on_delivery(driver)
+        if driver is not None:
+            self.driver_on_delivery(driver)
 
     # Updates the customer record
     def updateCustomerRecord(self, email, orderId):
@@ -111,7 +112,8 @@ class Orders:
                     'id': final_result['_id'],
                     'comments': final_result['comments'],
                     'items': final_result['items'],
-                    'status': final_result['orderStatus']
+                    'status': final_result['orderStatus'],
+                    'type': final_result['orderType']
                 }
 
         return order_list
@@ -195,20 +197,24 @@ class Orders:
     def find_order_by_id(self, oid):
         oidQuery = {"_id": ObjectId(oid)}
         orders = self.orders_db.find_one(oidQuery)
-        order = Order(orders['email'], orders['items'], orders['comments'], orders['orderType'], orders['dateTime'],
+        if orders is not None:
+            order = Order(orders['email'], orders['items'], orders['comments'], orders['orderType'], orders['dateTime'],
                                orders['driver'], orders['_id'], orders['tip_amount'])
-        return order
+            return order
+        return None
 
     def get_customer_order_history(self, email):
         customers = Customers()
         customer = customers.findCustomerByEmail(email)
         order_history = []
-        for order in customer.orders:
-           order_history.append(self.find_order_by_id(ObjectId(order)))
-        order_items = []
-        for order in order_history:
-            order_items.append(order.items)
-        return order_items
+        if customer.orders is not None:
+            for order in customer.orders:
+               order_history.append(self.find_order_by_id(ObjectId(order)))
+            order_items = []
+            for order in order_history:
+                order_items.append(order.items)
+            return order_items
+        return None
 
 
 class Order:

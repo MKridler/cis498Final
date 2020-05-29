@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block content  %}
+    <div style="text-align: center">
   <h2>Welcome to Willy's Pizza</h2>
   {% if form.errors %}
     <p style="color: red">Your username and password didn't match. Please try again.</p>
@@ -21,6 +22,9 @@
       </p>
     {% endfor %}
     <button type="submit">Log in</button>
-    <a href="{% url 'signup' %}">New to Willy's Pizza? Sign up!</a>
+  <br>
+  <br>
+    <a type="submit" href="{% url 'signup' %}">New to Willy's Pizza? Sign up!</a>
   </form>
+    </div>
 {% endblock %}

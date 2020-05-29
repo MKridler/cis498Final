@@ -5,11 +5,11 @@
 {% block content %}
 {% if user.is_authenticated %}
   <div style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Ordering Service</div>
-  <div class="split">
-  <div class = align-left>
+
+  <div style="background-color: aquamarine">
   {% for menuItem in menu %}
-        <div class="col-sm-3">
-            <p>{{ menuItem.type }}</p>
+        <div style="border:2px solid black;width: 150px;padding: 10px; margin: 10px; text-align: left; float: left" >
+{#            <p>{{ menuItem.type }}</p>#}
             <p>{{ menuItem.name }}</p>
             <p>{{ menuItem.description }}</p>
             <p>Price: ${{ menuItem.price }}</p>
@@ -17,10 +17,11 @@
         </div>
     {% endfor %}
   </div>
-  </div>
+    <div style="clear: both"></div>
 
-    <div class="split right">
-  <div class = align-right>
+
+
+  <div style="position:relative; display: inline-block">
   <br>
       <hr>
   <td colspan= 3> Cart: </td><br><br>
@@ -47,8 +48,6 @@
       <p>Total Price: ${{ total }}</p>
       <a href="{% url 'checkout' %}">Checkout</a>
       {% endif %}
-
-  </div>
   </div>
       <br>
       <hr>

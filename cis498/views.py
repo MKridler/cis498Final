@@ -323,7 +323,8 @@ def get_customer_order_history(email):
     orders = Orders()
     order_history =  orders.get_customer_order_history(email)
     string_order_history = []
-    for order in order_history:
-        order = ','.join(order)
-        string_order_history.append(order)
+    if order_history is not None:
+        for order in order_history:
+            order = ','.join(order)
+            string_order_history.append(order)
     return string_order_history

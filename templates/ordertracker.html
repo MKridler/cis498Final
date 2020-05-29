@@ -5,11 +5,50 @@
 {% block content %}
 {% if user.is_authenticated %}
   <div style="text-align:center">Hi {{ user.username }}! Track the Status of your Order</div>
-        <div class="col-sm-3">
+        <div style="text-align: center">
             <p>{{ order.items }}</p>
             <p>{{ order.comments }}</p>
             <p>{{ order.email }}</p>
             <p>Order Status: {{ order.status }}</p>
+            <p>Order Type: {{ order.type }}</p>
+        {% if 'Pickup' not in order.type %}
+            {%  if order.status == 'Received' %}
+                {% load static %}
+                <img src="{% static "delivery-Received.png" %}" style="text-align: center">
+            {% elif order.status == 'In Progress' %}
+                {% load static %}
+                <img src="{% static "delivery-InProgress.png" %}" style="text-align: center">
+            {% elif order.status == 'Order Ready' %}
+                {% load static %}
+                <img src="{% static "delivery-orderReady.png" %}" style="text-align: center">
+
+            {% elif order.status == 'In Transit' %}
+                {% load static %}
+                <img src="{% static "delivery-inTransit.png" %}" style="text-align: center">
+
+            {% elif order.status == 'Order Complete' %}
+                {% load static %}
+                <img src="{% static "delivery-Complete.png" %}" style="text-align: center">
+            {% endif %}
+        {% else %}
+            {%  if order.status == 'Received' %}
+                {% load static %}
+                <img src="{% static "pickup-received.png" %}" style="text-align: center">
+            {% elif order.status == 'In Progress' %}
+                {% load static %}
+                <img src="{% static "pickup-InProgress.png" %}" style="text-align: center">
+            {% elif order.status == 'Order Ready' %}
+                {% load static %}
+                <img src="{% static "pickup-orderReady.png" %}" style="text-align: center">
+            {% elif order.status == 'Ready For Pickup' %}
+                {% load static %}
+                <img src="{% static "pickup.png" %}" style="text-align: center">
+            {% elif order.status == 'Order Complete' %}
+                {% load static %}
+                <img src="{% static "pickup-complete.png" %}" style="text-align: center">
+            {% endif %}
+        {% endif %}
+
         </div>
   <br>
   <hr>
