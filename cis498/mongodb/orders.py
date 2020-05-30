@@ -108,6 +108,7 @@ class Orders:
                 'items': '',
                 'status': 'No Pending Orders'}
         else:
+
             order_list ={
                     'email': final_result['email'],
                     'id': final_result['_id'],
@@ -160,8 +161,8 @@ class Orders:
                     driverDict[dictKey] = [orderTotal, newVal]
             return driverDict
 
-    def updateOrder(self, order):
 
+    def updateOrder(self, order):
         oidQuery = {"_id": ObjectId(order)}
         orderToUpdate = self.orders_db.find_one(oidQuery)
         currentOrderStatus = orderToUpdate[self.ORDER_STATUS]
@@ -210,6 +211,8 @@ class Orders:
     def get_customer_order_history(self, email):
         customers = Customers()
         customer = customers.findCustomerByEmail(email)
+        if customer is None:
+            return None
         order_history = []
         if customer.orders is not None:
             for order in customer.orders:

@@ -24,6 +24,7 @@ from cis498 import views as cisviews
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', cisviews.home, name='home'),
+    url(r'^home/$', cisviews.home, name='homepage'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     url(r'^stafflogin/$', cisviews.stafflogin, name='stafflogin'),

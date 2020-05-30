@@ -26,7 +26,7 @@ class SignUpForm(UserCreationForm):
 class MenuForm(forms.Form):
     name = forms.CharField(max_length=50)
     description = forms.CharField(max_length=150)
-    price = forms.CharField(max_length=10)
+    price = forms.DecimalField(decimal_places=2)
     type = forms.CharField(max_length=10)
     item_id = forms.CharField(max_length=50)
 
