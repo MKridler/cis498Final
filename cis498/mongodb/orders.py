@@ -2,6 +2,7 @@ from cis498.mongodb.customers import Customers
 from cis498.mongodb.drivers import Drivers
 from cis498.mongodb.mongoclient import MongoClientHelper
 from bson.objectid import ObjectId
+from decimal import Decimal
 import datetime
 
 
@@ -130,7 +131,7 @@ class Orders:
                     'email': order['email'],
                     'id': order['_id'],
                     'comments': order['comments'],
-                    'items': order['items'],
+                    'items': ', '.join(order['items']),
                     'status': order['orderStatus']
                 })
                 orderList.append(Dict)
@@ -151,14 +152,14 @@ class Orders:
             for driverOrder in driverOrders:
                 dictKey = driverOrder.datetime.strftime("%m/%d/%Y")
                 if dictKey not in driverDict:
-                    driverDict[dictKey] = [1, driverOrder.tips]
+                    driverDict[dictKey] = [1, driverOrder.tips, dictKey]
                 else:
                     dictList = driverDict[dictKey]
                     orderTotal = dictList[0] + 1
                     origVal = float(dictList[1])
                     driverTips = float(driverOrder.tips)
-                    newVal = origVal + driverTips
-                    driverDict[dictKey] = [orderTotal, newVal]
+                    newVal = Decimal(origVal + driverTips)
+                    driverDict[dictKey] = [orderTotal, round(newVal,2), dictKey]
             return driverDict
 
 

@@ -1,24 +1,32 @@
-{% extends 'staffbase.html' %}
+{% extends 'driverbase.html' %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
-  <div style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Driver Portal</div>
+  <h3 style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Driver Portal</h3>
+    <div class="container">
     <div class="row">
+  {%  if orders %}
   {% for order in orders %}
-        <div class="col-sm-3">
+        <div class="col-sm-3" style="border: 1px solid black; padding: 10px; margin: 10px">
             <p>{{ order.items }}</p>
             <p>{{ order.comments }}</p>
             <p>{{ order.email }}</p>
             <p>Order Status: {{ order.status }}</p>
-            <a href="{% url 'updateDriverOrders' order.id %}" class="btn btn-warning">Update Order</a>
+            <a href="{% url 'updateDriverOrders' order.id %}" class="btn btn-primary">Update Order</a>
         </div>
     {% endfor %}
+      {% else %}
+      <p>No Pending Deliveries</p>
+      {% endif %}
+  </div>
   </div>
   <br>
   <hr>
-  <div class="row">
+  <div class="container">
+  <div class="row" >
+  <div class="col-sm"><span class="float-left">
   <form method="GET" novalidate>{% csrf_token %}
     {% if orderHistory %}
     <select name="deliveryHistory">
@@ -29,10 +37,14 @@
     <button type="submit">View Transaction History</button>
         {% endif %}
   </form>
+  </span>
+  </div>
+  </div>
 
     {% if transactionHistory %}
-            <p id="numtransactions">Number of Transactions: {{ transactionHistory.0 }}</p>
-            <p id="tiptotals">Tip Totals: {{ transactionHistory.1 }}</p>
+            <tr id="date">Date: {{ transactionHistory.2 }}</tr><br>
+            <tr id="numtransactions">Number of Transactions: {{ transactionHistory.0 }}</tr><br>
+            <tr id="tiptotals">Tip Totals: {{ transactionHistory.1 }}</tr>
     {% endif %}
   </div>
   <br>

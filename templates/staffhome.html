@@ -4,10 +4,13 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  <div style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Staff Portal</div>
-  <div class="row">
+  <h3 style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Staff Portal</h3>
+  <div class="container">
   {% for order in orders %}
-        <div style="border:2px solid black;width: fit-content;padding: 10px; margin: 10px; text-align: left; float: left" >
+        {% if forloop.counter0 == 0 %}<div class="row">{% endif %}
+        {% if forloop.counter0|divisibleby:3 %}
+            </div><div class="row" style="order: 2">
+            <div class="col-sm" style="border: 1px solid black; padding: 10px; margin: 10px">
             <p>Items: {{ order.items }}</p>
             <p>Comments: {{ order.comments }}</p>
             <p>Customer Email: {{ order.email }}</p>
@@ -16,12 +19,26 @@
             {%  endif %}
             <p>Order Status: {{ order.status }}</p>
             {% if order.status != "In Transit" %}
-                <a href="{% url 'updateOrders' order.id %}" class="btn btn-warning">Update Order</a>
+                <a href="{% url 'updateOrders' order.id %}" class="btn btn-primary">Update Order</a>
+            {% endif %}
+            </div>
+        {% else %}
+            <div class="col-sm" style="border: 1px solid black; padding: 10px; margin: 10px">
+            <p>Items: {{ order.items }}</p>
+            <p>Comments: {{ order.comments }}</p>
+            <p>Customer Email: {{ order.email }}</p>
+            {% if order.driver != null %}
+                <p>Driver: {{ order.driver }}</p>
             {%  endif %}
-        </div>
+            <p>Order Status: {{ order.status }}</p>
+            {% if order.status != "In Transit" %}
+                <a href="{% url 'updateOrders' order.id %}" class="btn btn-primary">Update Order</a>
+            {% endif %}
+           </div>
+      {% endif %}
+      {% if forloop.last %}</div>{% endif %}
     {% endfor %}
   </div>
-    <div style="clear: both"></div>
   <br>
   <hr>
   <input type="button" class="button" value = "Edit Menu Items" onclick="location.href='{% url 'editMenuItem' %}'">
