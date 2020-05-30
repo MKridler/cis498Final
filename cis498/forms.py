@@ -8,7 +8,7 @@ from django.forms import ModelForm
 
 class SignUpForm(UserCreationForm):
     name = forms.CharField(max_length=30, required=True)
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.', required=True)
+    email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.', required=True)
     address = forms.CharField(max_length=50, required=True)
     phone_number = forms.CharField(min_length=10, max_length=11, required=True)
 
@@ -19,8 +19,14 @@ class SignUpForm(UserCreationForm):
     def clean(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise ValidationError("Email Exists")
+            error_messages = self.fields['email'].error_messages
+            error_messages['invalid_email'] = "This Email Already Exists"
+            self.fields['email'].error_messages = error_messages
+            raise forms.ValidationError("Email Exists")
         return self.cleaned_data
+
+    # def is_valid(self):
+    #     super().is_valid()
 
 
 class MenuForm(forms.Form):

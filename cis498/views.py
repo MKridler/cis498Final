@@ -91,7 +91,7 @@ def ordertracker(request):
     order = Orders()
     orders = order.getCurrentUserOrder(request.user.email, customer)
     orderItems = orders['items']
-    if orderItems is not '':
+    if orderItems != '':
         orders['items'] = ', '.join(orderItems)
     context = {
         'order': orders
@@ -198,6 +198,7 @@ def signup(request):
             return redirect('home')
     else:
         form = SignUpForm()
+    form = form
     return render(request, 'signup.html', {'form': form})
 
 
