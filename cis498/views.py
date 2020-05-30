@@ -25,6 +25,9 @@ def home(request):
     elif request.method == 'GET' and 'clearCart' in request.GET:
         delete_cart_order(request.user.email)
         return redirect(home)
+    elif request.method == 'GET' and 'deleteItem' in request.GET:
+        delete_from_cart(request)
+        return redirect(home)
     menu = get_menu()
     order = get_order(request)
     total = get_total(order)
@@ -160,10 +163,10 @@ def add_to_cart_from_history(request):
 
 
 @login_required()
-def delete_from_cart(request, **kwargs):
+def delete_from_cart(request):
     email = request.user.email
     cart = Cart()
-    item_id = kwargs.get('item_id')
+    item_id = request.GET['itemId']
     cart.deleteItemFromCart(email, item_id)
     return redirect(reverse('home'))
 
