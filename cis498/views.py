@@ -68,6 +68,9 @@ def checkout(request):
         order.generateOrder(request.user, cartItems, form)
         delete_cart_order(request.user.email)
         return redirect(ordertracker)
+    elif request.method == 'GET' and 'deleteItem' in request.GET:
+        delete_from_cart(request)
+        return redirect(checkout)
     else:
         order = get_order(request)
         total = get_total(order)

@@ -9,18 +9,15 @@
   <div class = align-right>
   <br>
       <hr>
-   <form method="post">
-    {% csrf_token %}
 
   <td colspan= 3> Cart: </td><br><br>
+  <form method="GET" novalidate>{% csrf_token %}
       {% for item in order %}
         <tr>
-          <td>{{ forloop.counter }}</td>
           <td>{{ item.name }}</td>
-          <td>${{ item.price }}</td>
-            <span class="pull-right">
-                <a href="{% url 'delete_from_cart' item.item_id %}" class="btn btn-warning">Delete from Cart</a>
-            </span>
+          <td>${{ item.price }} </td>
+          <input type="text" name="itemId" value="{{ item.item_id }}" hidden/>
+                <button id="deleteItem" name= "deleteItem" type="submit"><i class="fa fa-trash-o"></i></button>
         <br>
         </tr>
       {% empty %}
@@ -28,6 +25,9 @@
           <td colspan= 3> You have not added any items yet.</td>
         </tr>
       {% endfor %}
+  </form>
+     <form method="post">
+    {% csrf_token %}
   {%  if order %}
       <p>Sales Tax: 6.25%</p>
       <p id="baseTotalPrice">Base Price with Tax: ${{ total }}</p>

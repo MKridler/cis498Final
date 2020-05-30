@@ -3,22 +3,90 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  <div style="text-align:center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Ordering Service</div>
 
-  <div style="background-color: aquamarine">
+    <h3 style="text-align: center">Hi {{ user.username }}! Welcome to Willy's Pizza Online Ordering Service</h3>
+<div class="container">
+
   {% for menuItem in menu %}
-        <div style="border:2px solid black;width: 150px;padding: 10px; margin: 10px; text-align: left; float: left" >
-{#            <p>{{ menuItem.type }}</p>#}
-            <p>{{ menuItem.name }}</p>
-            <p>{{ menuItem.description }}</p>
-            <p>Price: ${{ menuItem.price }}</p>
-            {% if order|length < 5 %}
-            <a href="{% url 'add_to_cart' menuItem.id %}" class="btn btn-warning">Add to Cart</a>
-            {% endif %}
-        </div>
+{#        <div style="border:2px solid black;width: 150px;padding: 10px; margin: 10px; text-align: center; float: left" >#}
+        {% if forloop.counter0 == 0 %}<div class="row">{% endif %}
+        {% if forloop.counter0|divisibleby:2 %}
+            </div><div class="row" style="order: 2">
+            <div class="col-sm" style="border: 1px solid black; padding: 10px; margin: 10px">
+                  {% if menuItem.name == 'Cheese Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Cheese.png" %}">
+                  {% elif menuItem.name == 'Chicago Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Supreme.png" %}">
+                  {% elif menuItem.name == 'Staten Island Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Pepperoni.png" %}">
+                  {% elif menuItem.name == 'The Bronx Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Meat_Lovers.png" %}">
+                  {% elif menuItem.name == 'Manhattan Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_margherita.jpeg" %}">
+                  {% elif menuItem.name == 'Queens Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_veggie.jpg" %}">
+                  {% elif menuItem.name == 'Caprese Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_garlic.jpg" %}">
+                  {% else %}
+                      {% load static %}
+                        <img src="{% static "pizza_Cheese.png" %}">
+                {% endif %}
+                <p>{{ menuItem.name }}</p>
+                <p>{{ menuItem.description }}</p>
+                <p>Price: ${{ menuItem.price }}</p>
+                {% if order|length < 5 %}
+                <a href="{% url 'add_to_cart' menuItem.id %}" class="btn btn-primary">Add to Cart</a>
+                {% endif %}
+            </div>
+        {% else %}
+          <div class="col-sm" style="border: 1px solid black; padding: 10px; margin: 10px">
+    {#            <p>{{ menuItem.type }}</p>#}
+
+                {% if menuItem.name == 'Cheese Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Cheese.png" %}">
+                 {% elif menuItem.name == 'Chicago Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Supreme.png" %}">
+                {% elif menuItem.name == 'Staten Island Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Pepperoni.png" %}">
+                {% elif menuItem.name == 'The Bronx Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_Meat_Lovers.png" %}">
+                 {% elif menuItem.name == 'Manhattan Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_margherita.jpeg" %}">
+                {% elif menuItem.name == 'Queens Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_veggie.jpg" %}">
+                {% elif menuItem.name == 'Caprese Pizza' %}
+                     {% load static %}
+                        <img src="{% static "pizza_garlic.jpg" %}">
+                {% else %}
+                    {% load static %}
+                        <img src="{% static "pizza_Cheese.png" %}">
+                {% endif %}
+
+                <p>{{ menuItem.name }}</p>
+                <p>{{ menuItem.description }}</p>
+                <p>Price: ${{ menuItem.price }}</p>
+                {% if order|length < 5 %}
+                <a href="{% url 'add_to_cart' menuItem.id %}" class="btn btn-primary">Add to Cart</a>
+                {% endif %}
+            </div>
+      {% endif %}
+      {% if forloop.last %}</div>{% endif %}
     {% endfor %}
-  </div>
-    <div style="clear: both"></div>
+</div>
+{#    <div style="clear: both"></div>#}
 
 
 
